@@ -54,7 +54,7 @@ def run_game():
         screen.blit(score_surface, (score_rect.x + 30, score_rect.y - 30))
         screen.blit(next_surface, (next_rect.x + 30, next_rect.y - 30))
         if game.game_over:
-            game_over_screen(game.score) 
+            game_over_screen(screen, game.score) 
             game.reset()                
             continue
 
@@ -68,38 +68,94 @@ def run_game():
         pygame.display.update()
         clock.tick(60)
 
+from ranking import *
 
-def game_over_screen(score):
-    pygame.init()
-    screen = pygame.display.set_mode((720, 620))
-    pygame.display.set_caption("GAME OVER")
+def game_over_screen(screen, final_score):
+    pygame.font.init()
+    font = pygame.font.Font(None, 60)
+    small_font = pygame.font.Font(None, 40)
 
-    font_big = pygame.font.Font(None, 80)
-    font_small = pygame.font.Font(None, 40)
+    initials = ""
+    input_active = True
+    score_saved = False
 
-    game_over_text = font_big.render("GAME OVER", True, Colors.white)
-    score_text = font_small.render(f"PONTUAÇÃO: {score}", True, Colors.white)
-    prompt_text = font_small.render("ESPAÇO: Reiniciar  |  ESC: Sair", True, Colors.white)
+    clock = pygame.time.Clock()
+
+    cursor_visible = True
+    cursor_timer = 0
+    cursor_interval = 500  # ms
+
+    screen_width = screen.get_width()
 
     while True:
+        screen.fill(Colors.dark_grey)
+
+        # Título
+        title = font.render("GAME OVER", True, Colors.white)
+        screen.blit(title, title.get_rect(center=(screen_width // 2, 80)))
+
+        # Score
+        score_text = small_font.render(f"Score: {final_score}", True, Colors.white)
+        screen.blit(score_text, score_text.get_rect(center=(screen_width // 2, 140)))
+
+        # Input / Confirmação
+        cursor_timer += clock.get_time()
+        if cursor_timer >= cursor_interval:
+            cursor_visible = not cursor_visible
+            cursor_timer = 0
+
+        if input_active:
+            display_initials = initials
+            if cursor_visible and len(initials) < 3:
+                display_initials += "_"
+            initials_text = small_font.render(f"Digite 3 letras: {display_initials}", True, Colors.white)
+        else:
+            initials_text = small_font.render(f"Iniciais salvas: {initials}", True, Colors.green)
+
+        screen.blit(initials_text, initials_text.get_rect(center=(screen_width // 2, 200)))
+
+        # Instruções (só após salvar)
+        if not input_active:
+            prompt_text = small_font.render("ESPAÇO: Menu  |  ESC: Sair", True, Colors.white)
+            screen.blit(prompt_text, prompt_text.get_rect(center=(screen_width // 2, 240)))
+
+        # Ranking Title
+        ranking_title = small_font.render("RANKING", True, Colors.white)
+        screen.blit(ranking_title, ranking_title.get_rect(center=(screen_width // 2, 300)))
+
+        # Ranking List
+        for i, entry in enumerate(get_formatted_ranking()):
+            entry_text = small_font.render(entry, True, Colors.white)
+            y = 340 + i * 30
+            screen.blit(entry_text, entry_text.get_rect(center=(screen_width // 2, y)))
+
+        # Eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                exit()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+            if input_active and event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and len(initials) == 3:
+                    if not score_saved:
+                        save_score(initials.upper(), final_score)
+                        input_active = False
+                        score_saved = True
+                elif event.key == pygame.K_BACKSPACE:
+                    initials = initials[:-1]
+                elif len(initials) < 3 and event.unicode.isalpha():
+                    initials += event.unicode.upper()
+
+            if not input_active and event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    run_game()
-
-        screen.fill(Colors.dark_grey)
-        screen.blit(game_over_text, game_over_text.get_rect(center=(360, 200)))
-        screen.blit(score_text, score_text.get_rect(center=(360, 300)))
-        screen.blit(prompt_text, prompt_text.get_rect(center=(360, 400)))
+                    return run_game()
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    exit()
 
         pygame.display.update()
+        clock.tick(30)
+
 
 if __name__ == "__main__":
     run_game()
