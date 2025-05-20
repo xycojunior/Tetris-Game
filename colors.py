@@ -10,6 +10,7 @@ class Colors:
     white       = (230, 230, 230)  # branco apagado (bom para dark mode)
     dark_blue   = (50, 60, 100)    # azul escuro refinado
     light_blue  = (90, 130, 200)   # azul claro suave
+    black       = (0, 0, 0)
 
     @classmethod
     def get_cell_colors(cls):

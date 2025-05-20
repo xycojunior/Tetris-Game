@@ -18,7 +18,8 @@ class Game:
 		self.clear_sound = pygame.mixer.Sound("Sounds/clear.ogg")
 
 		# Música de fundo do jogo
-		pygame.mixer.music.load("Sounds/music.ogg")
+		pygame.mixer.music.load("Sounds/original_music.ogg")
+		pygame.mixer.music.set_volume(0.2)
 		pygame.mixer.music.play(-1)
 
 	# Atualiza a pontuação com base nas linhas limpas e nos pontos por movimentação para baixo
