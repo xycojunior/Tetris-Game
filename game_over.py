@@ -2,6 +2,7 @@
 import pygame
 import sys
 from colors import Colors
+from menu import menu
 
 def game_over_screen(score):
     pygame.init()
@@ -13,7 +14,7 @@ def game_over_screen(score):
 
     game_over_text = font_big.render("GAME OVER", True, Colors.white)
     score_text = font_small.render(f"PONTUAÇÃO: {score}", True, Colors.white)
-    prompt_text = font_small.render("ESC: Sair", True, Colors.white)
+    prompt_text = font_small.render("ESPAÇO: Menu  |  ESC: Sair", True, Colors.white)
 
     while True:
         for event in pygame.event.get():
@@ -25,6 +26,8 @@ def game_over_screen(score):
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+                if event.key == pygame.K_SPACE:
+                    return "menu"  # Sinaliza retorno ao menu
 
         screen.fill(Colors.dark_grey)
         screen.blit(game_over_text, game_over_text.get_rect(center=(360, 200)))

@@ -1,6 +1,6 @@
 # menu.py
 import pygame
-from main import run_game  # agora vai funcionar, pois main não importa mais o menu
+from main import run_game
 
 def menu():
     screen = pygame.display.set_mode((720, 620))
