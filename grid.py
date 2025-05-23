@@ -6,7 +6,7 @@ class Grid:
 		# Define o tamanho da grade (20 linhas x 10 colunas)
 		self.num_rows = 20
 		self.num_cols = 10
-		self.cell_size = 30  # Tamanho de cada célula em pixels
+		self.cell_size = 30 
 
 		# Cria a grade inicial com todas as células vazias (valor 0)
 		self.grid = [[0 for j in range(self.num_cols)] for i in range(self.num_rows)]

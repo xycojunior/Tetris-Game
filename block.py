@@ -4,18 +4,20 @@ from position import Position
 
 class Block:
 	def __init__(self, id):
-		self.id = id
-		self.cells = {}
-		self.cell_size = 30
-		self.row_offset = 0
-		self.column_offset = 0
-		self.rotation_state = 0
-		self.colors = Colors.get_cell_colors()
+		self.id = id  # Identificador da peça (ex: 0 = quadrado, 1 = L, etc.)
+		self.cells = {} # Dicionário {rotação: [Position, Position, ...]}
+		self.cell_size = 30 # Tamanho do bloco em pixels (usado para desenhar)
+		self.row_offset = 0 # Offset atual da peça no grid (posição no jogo)
+		self.column_offset = 0 # Offset atual da peça no grid (posição no jogo)
+		self.rotation_state = 0 #  Estado atual de rotação (0 a N-1)
+		self.colors = Colors.get_cell_colors() # Mapeia id → cor
 
+	# Desloca a peça no grid 
 	def move(self, rows, columns):
 		self.row_offset += rows
 		self.column_offset += columns
 
+	# Retorna as posições absolutas da peça no grid, somando o offset atual
 	def get_cell_positions(self):
 		tiles = self.cells[self.rotation_state]
 		moved_tiles = []
@@ -24,16 +26,19 @@ class Block:
 			moved_tiles.append(position)
 		return moved_tiles
 
+	# Avança para a próxima rotação. Se chegou ao fim, volta ao início (rotação cíclica)
 	def rotate(self):
 		self.rotation_state += 1
 		if self.rotation_state == len(self.cells):
 			self.rotation_state = 0
 
+	# Reverte uma rotação (útil quando a rotação causaria colisão e precisa ser desfeita)
 	def undo_rotation(self):
 		self.rotation_state -= 1
 		if self.rotation_state == -1:
 			self.rotation_state = len(self.cells) - 1
 
+	# Renderiza o bloco na tela, calculando posição visual com base nos offsets e cell_size
 	def draw(self, screen, offset_x, offset_y):
 		tiles = self.get_cell_positions()
 		for tile in tiles:
