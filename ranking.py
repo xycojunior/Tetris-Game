@@ -15,7 +15,7 @@ def save_score(initials, score):
     ranking = load_ranking()
     ranking.append({"initials": initials, "score": score})
     ranking.sort(key=lambda x: x["score"], reverse=True)
-    ranking = ranking[:10]  # mantém top 10
+    ranking = ranking[:5]
     with open(RANKING_FILE, "w") as f:
         json.dump(ranking, f)
 

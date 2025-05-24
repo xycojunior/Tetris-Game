@@ -4,13 +4,13 @@ from position import Position
 
 class Block:
 	def __init__(self, id):
-		self.id = id  # Identificador da peça (ex: 0 = quadrado, 1 = L, etc.)
+		self.id = id
 		self.cells = {} # Dicionário {rotação: [Position, Position, ...]}
-		self.cell_size = 30 # Tamanho do bloco em pixels (usado para desenhar)
-		self.row_offset = 0 # Offset atual da peça no grid (posição no jogo)
-		self.column_offset = 0 # Offset atual da peça no grid (posição no jogo)
+		self.cell_size = 30
+		self.row_offset = 0 
+		self.column_offset = 0 
 		self.rotation_state = 0 #  Estado atual de rotação (0 a N-1)
-		self.colors = Colors.get_cell_colors() # Mapeia id → cor
+		self.colors = Colors.get_cell_colors()
 
 	# Desloca a peça no grid 
 	def move(self, rows, columns):
@@ -26,7 +26,6 @@ class Block:
 			moved_tiles.append(position)
 		return moved_tiles
 
-	# Avança para a próxima rotação. Se chegou ao fim, volta ao início (rotação cíclica)
 	def rotate(self):
 		self.rotation_state += 1
 		if self.rotation_state == len(self.cells):

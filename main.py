@@ -8,15 +8,11 @@ from ranking import *
 def run_game():
     pygame.init()
 
-    # Cria uma fonte para os títulos e textos da interface.
     title_font = pygame.font.Font(None, 40)
 
-    # Pré-renderiza os textos fixos da interface do usuário.
     score_surface = title_font.render("PONTUAÇÃO", True, Colors.white)
     next_surface = title_font.render("PRÓXIMO BLOCO", True, Colors.white)
-    game_over_surface = title_font.render("GAME OVER", True, Colors.white)
 
-    # Define os retângulos onde serão mostradas a pontuação e o próximo bloco
     score_rect = pygame.Rect(320, 80, 420, 80)
     next_rect = pygame.Rect(320, 220, 420, 220)
 
@@ -24,7 +20,6 @@ def run_game():
     screen = pygame.display.set_mode((720, 620))
     pygame.display.set_caption("TETRIS UNIFAP") 
 
-    # Framerate
     clock = pygame.time.Clock()
 
     # Instancia o jogo
@@ -48,11 +43,9 @@ def run_game():
                     game.move_left()   
                 if event.key == pygame.K_RIGHT and not game.game_over:
                     game.move_right()  
-                # Botão de acelerar peça
                 if event.key == pygame.K_DOWN and not game.game_over:
                     game.move_down()   
                     game.update_score(0, 1)
-                # Botão de girar peça
                 if event.key == pygame.K_UP and not game.game_over:
                     game.rotate()
 
@@ -68,7 +61,7 @@ def run_game():
         screen.blit(score_surface, (score_rect.x + 30, score_rect.y - 30))
         screen.blit(next_surface, (next_rect.x + 30, next_rect.y - 30))
 
-        # Verifica se o o player perdeu para chamar a interface
+
         if game.game_over:
             game_over_screen(screen, game.score) 
             game.reset()                
@@ -83,12 +76,11 @@ def run_game():
         pygame.draw.rect(screen, Colors.white, next_rect, 0, border_radius=12)
         game.draw(screen)
 
-        # Atualiza a tela e limita o framerate a 60 FPS
+
         pygame.display.update()
         clock.tick(60)
 
 def game_over_screen(screen, final_score):
-    # Inicializa as fontes para os títulos e textos menores
     pygame.font.init()
     font = pygame.font.Font(None, 60)
     small_font = pygame.font.Font(None, 40)
@@ -107,14 +99,11 @@ def game_over_screen(screen, final_score):
     screen_width = screen.get_width()
 
     while True:
-        # Cor de fundo para o clima de game over
         screen.fill(Colors.dark_grey)
 
-        # Título
         title = font.render("GAME OVER", True, Colors.white)
         screen.blit(title, title.get_rect(center=(screen_width // 2, 80)))
 
-        # Score
         score_text = small_font.render(f"Score: {final_score}", True, Colors.white)
         screen.blit(score_text, score_text.get_rect(center=(screen_width // 2, 140)))
 
@@ -144,7 +133,7 @@ def game_over_screen(screen, final_score):
         ranking_title = small_font.render("RANKING", True, Colors.white)
         screen.blit(ranking_title, ranking_title.get_rect(center=(screen_width // 2, 300)))
 
-        # Renderiza a o ranking já formatado
+
         for i, entry in enumerate(get_formatted_ranking()):
             entry_text = small_font.render(entry, True, Colors.white)
             y = 340 + i * 30
@@ -152,7 +141,6 @@ def game_over_screen(screen, final_score):
 
         # Eventos do usuário
         for event in pygame.event.get():
-            # Fechar o jogo
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
@@ -168,7 +156,7 @@ def game_over_screen(screen, final_score):
                     initials = initials[:-1]
                 elif len(initials) < 3 and event.unicode.isalpha():
                     initials += event.unicode.upper()
-            # Reiniciar o jogo
+
             if not input_active and event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     return run_game()

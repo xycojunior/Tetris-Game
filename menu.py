@@ -12,13 +12,11 @@ def menu():
     button_font = pygame.font.Font(None, 40)
     play_button = pygame.Rect(260, 260, 200, 80)
 
-    # Loop inicial
     running = True
     while running:
-        # Desenha na interface
+
         screen.fill((30, 30, 30))
 
-        # Pinta o fundo de cinza escuro
         title = font.render("TETRIS UNIFAP", True, (255, 255, 255))
         screen.blit(title, title.get_rect(center=(360, 150)))
 
